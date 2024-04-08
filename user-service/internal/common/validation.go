@@ -9,6 +9,7 @@ import (
 var Validate *validator.Validate
 
 func LoadValidator() {
+	fmt.Println("Loading validator...")
 	Validate = validator.New()
 }
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-microservice/user-service/api/dto"
 	"go-microservice/user-service/internal/common"
+	"go-microservice/user-service/internal/user"
 	"net/http"
 )
 
@@ -25,6 +26,22 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
+
+	hashPass, err := common.HashPassword(dataRequest.Password)
+	common.LogIfError(err)
+
+	err = user.CreateUser(user.User{
+		Name:     dataRequest.Name,
+		Email:    dataRequest.Email,
+		Password: hashPass,
+	})
+
+	if err != nil {
+		common.ErrorBadRequest(w, err.Error())
+		return
+	}
+
+	common.LogIfError(err)
 
 	common.SuccessCreateData(w, common.SuccessResponse{})
 }

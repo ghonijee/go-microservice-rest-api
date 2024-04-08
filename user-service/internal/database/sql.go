@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"go-microservice/user-service/internal/common"
@@ -9,11 +10,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var DB *sql.DB
+var (
+	DB  *sql.DB
+	Ctx context.Context
+)
 
 func Connect() {
 	config := config.Config
-	username := config.GetString("database.username")
+	username := config.GetString("database.user")
 	password := config.GetString("database.password")
 	host := config.GetString("database.host")
 	port := config.GetInt("database.port")
@@ -26,4 +30,6 @@ func Connect() {
 	common.PanicIfError(err)
 
 	DB = db
+
+	Ctx = context.Background()
 }
