@@ -13,7 +13,7 @@ func NewRouter() *chi.Mux {
 	rootRouter.Mount("/api/v1", userRouter)
 
 	userRouter.Route("/users", func(r chi.Router) {
-		r.Get("/", handler.GetListUserHandler)
+		r.Get("/{id}", handler.GetDetailUserHandler)
 		r.Post("/", handler.CreateUserHandler)
 	})
 

@@ -23,7 +23,7 @@ func Connect() {
 	port := config.GetInt("database.port")
 	database := config.GetString("database.name")
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s", username, password, host, port, database)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true", username, password, host, port, database)
 
 	db, err := sql.Open("mysql", dsn)
 

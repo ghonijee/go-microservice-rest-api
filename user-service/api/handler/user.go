@@ -2,11 +2,13 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-microservice/user-service/api/dto"
 	"go-microservice/user-service/internal/common"
 	"go-microservice/user-service/internal/user"
 	"net/http"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +48,18 @@ func CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 	common.SuccessCreateData(w, common.SuccessResponse{})
 }
 
-func GetListUserHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Print(r.Body)
-	w.Write([]byte("Hello World"))
+func GetDetailUserHandler(w http.ResponseWriter, r *http.Request) {
+	userId := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(userId, 0, 32)
+	common.LogIfError(err)
+	user, err := user.FindById(int(id))
+
+	if err != nil {
+		common.ErrorInternalServer(w, err.Error())
+		return
+	}
+
+	common.SuccessJson(w, common.SuccessResponse{
+		Data: user,
+	})
 }
